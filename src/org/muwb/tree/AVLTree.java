@@ -1,6 +1,11 @@
 package org.muwb.tree;
 
 /**
+ * AVL 树是一棵平衡的二叉查找树，于 1962 年，G. M. Adelson-Velsky 和 E. M. Landis
+ * 在他们的论文《An algorithm for the organization of information》中发表
+ *
+ * 所谓的平衡之意，就是树中任意一个结点下左右两个子树的高度差不超过 1。
+ *
  * Created by muwb on 2017/11/22.
  */
 public class AVLTree {
