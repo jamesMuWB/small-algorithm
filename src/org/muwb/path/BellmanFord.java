@@ -12,85 +12,101 @@ public class BellmanFord {
     private static final int max = 1000;
 
     public static void main(String[] args){
-
         BellmanFord bf = new BellmanFord();
-        bf.bellmanFord(0);
+        bf.bellmanFord();
     }
 
-
-    public void bellmanFord(int start){
+    public void bellmanFord(){
         Node[] nodes = initData();
         Map<Integer, Integer> map = new HashMap<Integer,Integer>();
         for(Node n : nodes){
-            if(map.get(n.u) != null)
-                continue;
+            if(map.get(n.u) == null)
+                map.put(n.u, 1);
+            if(map.get(n.v) == null)
+                map.put(n.v, 1);
 
-            map.put(n.u, 1);
         }
+
         int[] d = new int[map.size()];
         int[] p = new int[map.size()];
 
-        d[0] = 0;
-        p[0] = 0;
+        d[0] = 0;//到终点的权重值 p[终点]=权重
+        p[0] = 0;//终点对应的起点 index是终点  value是起点. p[终点]=起点
         for (int i = 1; i < d.length; i++) {
             d[i] = max;
             p[i] = -1;
 
         }
 
-        boolean cycleFlag;
+        boolean flag;
         for(int i = 1; i < d.length; i++){
-            cycleFlag = true;
+            flag = true;
             for(int j = 0; j < nodes.length; j++){
                 if(d[nodes[j].v] > d[nodes[j].u] + nodes[j].w) {
                     d[nodes[j].v] = d[nodes[j].u] + nodes[j].w;
                     p[nodes[j].v] = nodes[j].u;
-
-//                    System.out.println("from " + nodes[j].u + " to " + nodes[j].v + " i=" + i + " " + d[nodes[j].v]);
-//                    System.out.println("pre " + nodes[j].v + " from " + nodes[j].u + " i=" + i);
-                    cycleFlag = false;
+                    flag = false;
                 }
             }
 
-//            if(cycleFlag)
-//                break;
+            if(flag)
+                break;
         }
 
-        for(int i = 0; i < d.length; i++){
-            System.out.print("d[" + i + "]=" + d[i]);
-            System.out.println("   p[" + i + "]=" + p[i]);
+        //计算路径的起始位置为0
+        int start = 0;
+        for (int i = 1; i < d.length; i++) {
+            if(printPath(p, start, i))
+                System.out.println(" 距离：" + d[i]);
+            else
+                System.out.println(start + "  " + i + " 距离：无群大");
         }
-
-
-//        for (int i = 0; i < d.length; i++) {
-//            printPath(p, start, i + start);
-//            System.out.println(" 距离：" + d[i]);
-//        }
     }
 
-    private void printPath(int[] path, int from, int to) {
+    private boolean printPath(int[] path, int from, int to) {
         int pre;
         if (from == to) {
             System.out.print(to + " ");
-            return;
+            return true;
         }
-        pre = path[to - 1];
+
+        int preIdx = to - 1;
+
+        if(preIdx < 0)
+            return false;
+
+        pre = path[preIdx];
+        if(pre == to)
+            return false;
+
         printPath(path, from, pre);
         System.out.print(" " + to + " ");
+        return true;
     }
 
     private Node[] initData(){
-        Node n1 = new Node(0, 1, 10);
-        Node n2 = new Node(0, 2, -3);
-        Node n3 = new Node(1, 3, 3);
-        Node n4 = new Node(2, 1, 5);
-        Node n5 = new Node(4, 5, -1);
-        Node n6 = new Node(5, 3, 3);
-        Node n7 = new Node(3, 2, 1);
-        Node n8 = new Node(3, 0, 1);
-        Node n9 = new Node(2, 5, -5);
-        Node n10 = new Node(4, 2, -2);
-        return new Node[]{n1,n2,n3,n4,n5,n6,n7,n8,n9,n10};
+//        Node n1 = new Node(0, 1, 1);
+//        Node n2 = new Node(0, 2, -3);
+//        Node n3 = new Node(1, 3, 3);
+//        Node n4 = new Node(2, 1, 5);
+//        Node n5 = new Node(4, 5, -1);
+//        Node n6 = new Node(5, 3, 3);
+//        Node n7 = new Node(3, 2, 1);
+//        Node n8 = new Node(3, 0, 1);
+//        Node n9 = new Node(2, 5, -5);
+//        Node n10 = new Node(4, 2, -2);
+//        Node n11 = new Node(4, 0, 4);
+//        return new Node[]{n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11};
+
+        Node n1 = new Node(0, 1, -1);
+        Node n2 = new Node(0, 2, 4);
+        Node n3 = new Node(1, 2, 3);
+        Node n4 = new Node(3, 1, 1);
+        Node n5 = new Node(1, 3, 2);
+        Node n6 = new Node(3, 2, 5);
+        Node n7 = new Node(1, 4, 2);
+        Node n8 = new Node(4, 3, -3);
+        return new Node[]{n1,n2,n3,n4,n5,n6,n7,n8};
     }
 
 
